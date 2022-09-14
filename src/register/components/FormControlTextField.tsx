@@ -1,14 +1,19 @@
 import { TextField } from '@material-ui/core';
 import React from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
+import { Controller, FieldError, useFormContext } from 'react-hook-form';
 
 interface Props {
   name: string;
+  label: string;
   placeholder: string;
 }
 
-export const FormControlTextField = ({ name, placeholder }: Props) => {
-  const { control } = useFormContext();
+export const FormControlTextField = ({ name, label, placeholder }: Props) => {
+  const {
+    control,
+    formState: { errors },
+  } = useFormContext();
+  const error = errors[name] as FieldError;
 
   return (
     <Controller
@@ -16,7 +21,14 @@ export const FormControlTextField = ({ name, placeholder }: Props) => {
       control={control}
       defaultValue=""
       render={({ field }) => (
-        <TextField {...field} label={name} variant="outlined" placeholder={placeholder} fullWidth required />
+        <TextField
+          {...field}
+          label={label}
+          variant="outlined"
+          placeholder={placeholder}
+          helperText={error?.message}
+          fullWidth
+        />
       )}
     />
   );
